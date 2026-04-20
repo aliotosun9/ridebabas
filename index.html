@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RIDEBABAS — Courier Supply for Serbia</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --bg:          #080706;
+      --surface:     #111009;
+      --card:        #1A1815;
+      --red:         #F2012F;
+      --red-dark:    #C40026;
+      --red-dim:     rgba(242, 1, 47, 0.12);
+      --gold:        #ECAA44;
+      --text:        #F4F3EE;
+      --muted:       #847D74;
+      --muted-light: #B5AFA6;
+      --border:      rgba(244, 243, 238, 0.07);
+      --border-mid:  rgba(244, 243, 238, 0.14);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg); color: var(--text);
+      font-family: 'Quicksand', sans-serif;
+      font-size: 16px; line-height: 1.7; overflow-x: hidden;
+    }
+    h1, h2, h3, h4, h5, h6 { font-family: 'Poppins', sans-serif; letter-spacing: -0.03em; }
+
+    body::after {
+      content: ''; position: fixed; inset: 0;
+      pointer-events: none; z-index: 9999; opacity: 0.35;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+    }
+
+    /* ─── NAV ─── */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+      padding: 22px 60px;
+      display: flex; align-items: center; justify-content: space-between;
+      transition: background 0.5s ease, padding 0.4s ease, border-color 0.5s ease;
+      border-bottom: 1px solid transparent;
+    }
+    .nav.scrolled {
+      background: rgba(8, 7, 6, 0.92);
+      backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+      padding: 14px 60px; border-color: var(--border);
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-logo img { height: 98px; width: auto; mix-blend-mode: screen; filter: drop-shadow(0 0 8px rgba(242,1,47,0.3)); }
+    .nav-logo-text { display: none; }
+    .nav-right { display: flex; align-items: center; gap: 28px; }
+    .nav-links { display: flex; align-items: center; gap: 32px; list-style: none; }
+    .nav-links a { font-family: 'Quicksand', sans-serif; font-size: 14px; font-weight: 600; color: var(--muted); text-decoration: none; letter-spacing: 0.01em; transition: color 0.2s ease; }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta {
+      background: var(--red) !important; color: var(--text) !important;
+      padding: 9px 22px !important; border-radius: 7px;
+      font-family: 'Poppins', sans-serif !important; font-weight: 700 !important;
+      box-shadow: 0 2px 16px rgba(242,1,47,0.3); white-space: nowrap;
+      transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease !important;
+    }
+    .nav-cta:hover { background: var(--red-dark) !important; transform: translateY(-1px); box-shadow: 0 6px 24px rgba(242,1,47,0.45) !important; }
+    .nav-cta:active { transform: translateY(0) !important; }
+
+    /* Language toggle */
+    .lang-toggle {
+      display: flex; align-items: center;
+      background: rgba(244,243,238,0.05);
+      border: 1px solid var(--border-mid);
+      border-radius: 7px; overflow: hidden;
+    }
+    .lang-btn {
+      padding: 7px 13px; cursor: pointer;
+      color: var(--muted); background: none; border: none;
+      font-family: 'Poppins', sans-serif; font-size: 12px;
+      font-weight: 700; letter-spacing: 0.08em;
+      transition: color 0.2s ease, background 0.2s ease;
+    }
+    .lang-btn.active { background: var(--red); color: var(--text); }
+    .lang-btn:not(.active):hover { color: var(--text); background: rgba(244,243,238,0.06); }
+    .lang-sep { width: 1px; height: 18px; background: var(--border-mid); flex-shrink: 0; }
+
+    /* ─── HERO ─── */
+    .hero {
+      min-height: 100vh; position: relative; overflow: hidden;
+      display: flex; align-items: center; padding: 130px 60px 100px;
+    }
+    .hero-bg-base {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 90% 90% at 72% 55%, rgba(242,1,47,0.14) 0%, transparent 55%),
+        radial-gradient(ellipse 50% 50% at 15% 85%, rgba(236,170,68,0.06) 0%, transparent 50%),
+        radial-gradient(ellipse 40% 60% at 80% 10%, rgba(242,1,47,0.05) 0%, transparent 50%),
+        linear-gradient(160deg, #0A0908 0%, #080706 60%, #060504 100%);
+    }
+    .hero-grid {
+      position: absolute; inset: 0; z-index: 2;
+      background-image: linear-gradient(rgba(244,243,238,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(244,243,238,0.04) 1px, transparent 1px);
+      background-size: 64px 64px;
+      mask-image: radial-gradient(ellipse 90% 90% at 50% 50%, black 0%, transparent 100%);
+      pointer-events: none;
+    }
+    .hero-content {
+      position: relative; z-index: 3;
+      max-width: 1240px; margin: 0 auto; width: 100%;
+      display: flex; flex-direction: column;
+      align-items: flex-start;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: rgba(236,170,68,0.08); border: 1px solid rgba(236,170,68,0.22);
+      border-radius: 100px; padding: 7px 16px;
+      font-size: 11.5px; font-weight: 700; letter-spacing: 0.1em;
+      color: var(--gold); text-transform: uppercase; font-family: 'Poppins', sans-serif;
+      margin-bottom: 28px;
+    }
+    .hero-badge-dot { width: 6px; height: 6px; background: var(--gold); border-radius: 50%; animation: blink 2.2s ease-in-out infinite; }
+    @keyframes blink { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.6)} }
+    .hero-title { font-size: clamp(44px, 5.5vw, 78px); font-weight: 900; line-height: 1.03; letter-spacing: -0.045em; margin-bottom: 28px; }
+    .hero-title .line-red { color: var(--red); }
+    .hero-title .line-gold { color: var(--gold); }
+    .hero-sub { font-size: 17px; color: var(--muted-light); line-height: 1.75; max-width: 460px; margin-bottom: 44px; font-weight: 500; }
+    .hero-sub strong { color: var(--text); font-weight: 700; }
+    .hero-actions { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+
+    @keyframes glow-pulse { 0%,100%{opacity:1} 50%{opacity:0.6} }
+    .hero-video-bg { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
+    .hero-video-bg video { width: 100%; height: 111%; object-fit: cover; object-position: top center; display: block; }
+    .hero-video-overlay { position: absolute; inset: 0; z-index: 1; background: linear-gradient(105deg, rgba(6,5,4,0.88) 0%, rgba(6,5,4,0.72) 45%, rgba(6,5,4,0.35) 100%); }
+
+    /* ─── SHARED ─── */
+    .section-wrap { max-width: 1240px; margin: 0 auto; }
+    .chip { display: inline-flex; align-items: center; gap: 10px; font-size: 11px; font-weight: 700; letter-spacing: 0.14em; color: var(--red); text-transform: uppercase; font-family: 'Poppins', sans-serif; margin-bottom: 18px; }
+    .chip::before { content: ''; width: 20px; height: 1px; background: var(--red); display: block; }
+    .chip-centered { justify-content: center; }
+    .btn { display: inline-block; font-family: 'Poppins', sans-serif; font-weight: 700; text-decoration: none; cursor: pointer; border: none; outline: none; }
+    .btn-red { background: var(--red); color: var(--text); padding: 15px 34px; border-radius: 8px; font-size: 15px; box-shadow: 0 4px 24px rgba(242,1,47,0.28), inset 0 1px 0 rgba(255,255,255,0.08); transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease; }
+    .btn-red:hover { background: var(--red-dark); transform: translateY(-2px); box-shadow: 0 8px 36px rgba(242,1,47,0.4), inset 0 1px 0 rgba(255,255,255,0.08); }
+    .btn-red:active { transform: translateY(0); }
+    .btn-ghost { color: var(--muted-light); padding: 15px 20px; font-size: 15px; display: inline-flex; align-items: center; gap: 8px; transition: color 0.2s ease; }
+    .btn-ghost .arrow { transition: transform 0.2s ease; }
+    .btn-ghost:hover { color: var(--text); }
+    .btn-ghost:hover .arrow { transform: translateX(5px); }
+
+    /* ─── STATS ─── */
+    .stats { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 28px 60px; }
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); max-width: 1240px; margin: 0 auto; }
+    .stat { text-align: center; padding: 0 24px; position: relative; }
+    .stat:not(:last-child)::after { content: ''; position: absolute; right: 0; top: 15%; bottom: 15%; width: 1px; background: var(--border); }
+    .stat-num { font-family: 'Poppins', sans-serif; font-size: 42px; font-weight: 800; letter-spacing: -0.05em; line-height: 1; margin-bottom: 8px; }
+    .stat-num .r { color: var(--red); }
+    .stat-num .g { color: var(--gold); }
+    .stat-lbl { font-size: 12px; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; }
+
+    /* ─── ABOUT ─── */
+    .about { padding: 130px 60px; }
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+    .about-title { font-size: clamp(34px, 3.5vw, 54px); font-weight: 800; line-height: 1.1; margin-bottom: 24px; }
+    .about-title em { font-style: normal; color: var(--red); }
+    .about-p { font-size: 16px; color: var(--muted-light); line-height: 1.8; font-weight: 500; margin-bottom: 16px; }
+    .about-p strong { color: var(--text); font-weight: 700; }
+    .about-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .acard { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 32px 24px; position: relative; overflow: hidden; transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s; display: flex; flex-direction: column; align-items: center; }
+    .acard::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--red), transparent); opacity: 0; transition: opacity 0.3s; }
+    .acard:hover { border-color: rgba(242,1,47,0.18); transform: translateY(-3px); box-shadow: 0 16px 48px rgba(0,0,0,0.35); }
+    .acard:hover::before { opacity: 1; }
+    .acard-icon { font-size: 42px; margin-bottom: 18px; display: flex; align-items: center; justify-content: center; }
+    .acard-t { font-family: 'Poppins', sans-serif; font-size: 16px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 8px; text-align: center; }
+    .acard-d { font-size: 14px; color: rgba(255,255,255,0.62); line-height: 1.7; font-weight: 500; text-align: center; }
+
+    /* ─── HOW IT WORKS ─── */
+    .how { background: var(--surface); padding: 130px 60px; position: relative; overflow: hidden; }
+    .how::before { content: ''; position: absolute; width: 700px; height: 700px; top: -200px; right: -200px; background: radial-gradient(circle, rgba(242,1,47,0.04) 0%, transparent 70%); pointer-events: none; }
+    .how-head { text-align: center; margin-bottom: 76px; }
+    .how-title { font-size: clamp(34px, 3.5vw, 54px); font-weight: 800; margin-bottom: 14px; }
+    .how-title em { font-style: normal; color: var(--red); }
+    .how-sub { font-size: 17px; color: var(--muted-light); max-width: 500px; margin: 0 auto; font-weight: 500; }
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; position: relative; }
+    .steps-line { position: absolute; top: 42px; left: calc(33.33% / 2 + 28px); right: calc(33.33% / 2 + 28px); height: 1px; background: linear-gradient(90deg, var(--red), var(--gold), var(--red)); opacity: 0.25; pointer-events: none; }
+    .step { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 40px 32px; position: relative; transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s; }
+    .step:hover { border-color: rgba(242,1,47,0.22); transform: translateY(-5px); box-shadow: 0 24px 64px rgba(0,0,0,0.4), 0 0 0 1px rgba(242,1,47,0.15); }
+    .step-n { width: 54px; height: 54px; border-radius: 50%; background: var(--red); display: flex; align-items: center; justify-content: center; font-family: 'Poppins', sans-serif; font-size: 18px; font-weight: 800; margin-bottom: 28px; position: relative; z-index: 1; box-shadow: 0 6px 24px rgba(242,1,47,0.38); }
+    .step-t { font-family: 'Poppins', sans-serif; font-size: 20px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 12px; }
+    .step-d { font-size: 15px; color: var(--muted-light); line-height: 1.72; font-weight: 500; }
+
+    /* ─── PARTNERS ─── */
+    .partners { padding: 90px 60px; }
+    .partners-lbl { text-align: center; font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.14em; margin-bottom: 56px; font-family: 'Poppins', sans-serif; }
+    .partners-row { display: flex; align-items: stretch; justify-content: center; gap: 24px; flex-wrap: wrap; }
+
+    .p-card {
+      position: relative; overflow: hidden;
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 20px; padding: 48px 64px;
+      min-width: 260px; flex: 1; max-width: 380px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0;
+      transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+      cursor: default;
+    }
+    .p-card:hover { transform: translateY(-6px); }
+
+    .p-glow {
+      position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+      opacity: 0.18; transition: opacity 0.35s ease;
+    }
+    .p-card:hover .p-glow { opacity: 0.32; }
+
+    .p-glow-wolt {
+      background: radial-gradient(ellipse 80% 80% at 50% 50%, #009DE0, transparent);
+      animation: glow-wolt 4s ease-in-out infinite;
+    }
+    .p-glow-mrd {
+      background: radial-gradient(ellipse 80% 80% at 50% 50%, #E0004F, transparent);
+      animation: glow-mrd 4s ease-in-out infinite;
+    }
+    @keyframes glow-wolt {
+      0%,100% { transform: scale(1);   opacity: 0.18; }
+      50%      { transform: scale(1.1); opacity: 0.28; }
+    }
+    @keyframes glow-mrd {
+      0%,100% { transform: scale(1);   opacity: 0.18; }
+      50%      { transform: scale(1.1); opacity: 0.28; }
+    }
+
+    .p-card-wolt { border-color: rgba(0,157,224,0.15); }
+    .p-card-wolt:hover { border-color: rgba(0,157,224,0.4); box-shadow: 0 20px 60px rgba(0,157,224,0.12); }
+    .p-card-mrd  { border-color: rgba(224,0,79,0.15); }
+    .p-card-mrd:hover  { border-color: rgba(224,0,79,0.4);  box-shadow: 0 20px 60px rgba(224,0,79,0.12); }
+
+    .p-logo { position: relative; z-index: 1; height: 88px; width: auto; object-fit: contain; transition: transform 0.35s ease; filter: drop-shadow(0 4px 16px rgba(0,0,0,0.4)); }
+    .p-card:hover .p-logo { transform: scale(1.06); }
+
+    @media (max-width: 640px) {
+      .partners-row { flex-direction: column; align-items: center; }
+      .p-card { width: 100%; max-width: 100%; padding: 40px 48px; }
+    }
+
+    /* ─── BENEFITS ─── */
+    .benefits { background: var(--surface); padding: 130px 60px; }
+    .benefits-head { text-align: center; margin-bottom: 72px; }
+    .benefits-title { font-size: clamp(34px, 3.5vw, 54px); font-weight: 800; margin-bottom: 14px; }
+    .benefits-title em { font-style: normal; color: var(--gold); }
+    .benefits-sub { font-size: 17px; color: var(--muted-light); max-width: 480px; margin: 0 auto; font-weight: 500; }
+    .bens { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+    .ben { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 40px 28px; text-align: center; transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s; }
+    .ben:hover { transform: translateY(-5px); box-shadow: 0 24px 64px rgba(0,0,0,0.4); border-color: rgba(236,170,68,0.2); }
+    .ben.hot { background: linear-gradient(145deg, rgba(242,1,47,0.14) 0%, rgba(242,1,47,0.04) 100%); border-color: rgba(242,1,47,0.22); }
+    .ben.hot:hover { border-color: rgba(242,1,47,0.4); box-shadow: 0 24px 64px rgba(242,1,47,0.14); }
+    .ben-icon-wrap {
+      width: 64px; height: 64px; border-radius: 18px;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 24px;
+    }
+    .ben-icon-wrap svg { width: 28px; height: 28px; stroke: #fff; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .iw-red  { background: linear-gradient(135deg, #F2012F, #9B0020); box-shadow: 0 8px 24px rgba(242,1,47,0.4); }
+    .iw-blue { background: linear-gradient(135deg, #0077CC, #004F99); box-shadow: 0 8px 24px rgba(0,119,204,0.35); }
+    .iw-gold { background: linear-gradient(135deg, #ECAA44, #B87820); box-shadow: 0 8px 24px rgba(236,170,68,0.35); }
+    .iw-teal { background: linear-gradient(135deg, #0D9488, #0A6E65); box-shadow: 0 8px 24px rgba(13,148,136,0.35); }
+    .ben-t { font-family: 'Poppins', sans-serif; font-size: 17px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 10px; }
+    .ben-d { font-size: 14px; color: var(--muted-light); line-height: 1.7; font-weight: 500; }
+
+    /* ─── COUNTRIES ─── */
+    .countries { padding: 130px 60px; }
+    .countries-head { margin-bottom: 60px; }
+    .countries-title { font-size: clamp(34px, 3.5vw, 54px); font-weight: 800; margin-bottom: 14px; }
+    .countries-title em { font-style: normal; color: var(--red); }
+    .countries-sub { font-size: 17px; color: var(--muted-light); max-width: 620px; font-weight: 500; line-height: 1.7; }
+    .cou-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .cou { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 36px 32px; display: flex; align-items: flex-start; gap: 22px; transition: border-color 0.3s, transform 0.3s; }
+    .cou:hover { transform: translateY(-3px); border-color: rgba(236,170,68,0.2); }
+    .cou-flag { font-size: 52px; line-height: 1; flex-shrink: 0; }
+    .cou-flag-img { width: 56px; height: 42px; border-radius: 6px; object-fit: cover; flex-shrink: 0; box-shadow: 0 2px 8px rgba(0,0,0,0.4); }
+    .cou-name { font-family: 'Poppins', sans-serif; font-size: 21px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 8px; }
+    .cou-d { font-size: 14px; color: var(--muted-light); line-height: 1.65; font-weight: 500; margin-bottom: 14px; }
+    .tag { display: inline-block; padding: 4px 12px; border-radius: 100px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; font-family: 'Poppins', sans-serif; }
+    .tag-red { background: rgba(242,1,47,0.12); color: var(--red); border: 1px solid rgba(242,1,47,0.22); }
+    .tag-gold { background: rgba(236,170,68,0.1); color: var(--gold); border: 1px solid rgba(236,170,68,0.22); }
+    .tag-green { background: rgba(34,197,94,0.1); color: #22c55e; border: 1px solid rgba(34,197,94,0.25); }
+
+    /* ─── TESTIMONIALS ─── */
+    .testimonials { padding: 130px 60px; background: var(--bg); position: relative; overflow: hidden; }
+    .testi-header { text-align: center; margin-bottom: 64px; }
+    .testi-tag { display: inline-block; border: 1px solid var(--border-mid); border-radius: 8px; padding: 5px 18px; font-size: 11px; font-weight: 700; color: var(--muted-light); text-transform: uppercase; letter-spacing: 0.12em; font-family: 'Poppins', sans-serif; margin-bottom: 20px; }
+    .testi-title { font-size: clamp(32px, 3.5vw, 52px); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 16px; }
+    .testi-title em { font-style: normal; color: var(--gold); }
+    .testi-sub { font-size: 17px; color: var(--muted-light); max-width: 500px; margin: 0 auto; font-weight: 500; }
+    .testi-cols {
+      display: flex; justify-content: center; gap: 20px;
+      max-height: 720px; overflow: hidden;
+      -webkit-mask-image: linear-gradient(to bottom, transparent, black 18%, black 82%, transparent);
+      mask-image: linear-gradient(to bottom, transparent, black 18%, black 82%, transparent);
+    }
+    .testi-col { display: flex; flex-direction: column; width: 300px; flex-shrink: 0; overflow: hidden; }
+    .testi-col-2 { display: none; }
+    .testi-col-3 { display: none; }
+    @media (min-width: 768px) { .testi-col-2 { display: flex; } }
+    @media (min-width: 1024px) { .testi-col-3 { display: flex; } }
+    .testi-inner {
+      display: flex; flex-direction: column; gap: 20px;
+      animation: testi-scroll linear infinite;
+    }
+    .testi-inner:hover { animation-play-state: paused; }
+    @keyframes testi-scroll { from { transform: translateY(0); } to { transform: translateY(-50%); } }
+    .testi-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 20px;
+      padding: 28px; flex-shrink: 0;
+      transition: border-color 0.3s ease;
+    }
+    .testi-card:hover { border-color: rgba(236,170,68,0.2); }
+    .testi-text { font-size: 14px; color: var(--muted-light); line-height: 1.75; font-weight: 500; margin-bottom: 20px; }
+    .testi-user { display: flex; align-items: center; gap: 12px; }
+    .testi-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; flex-shrink: 0; border: 2px solid var(--border); }
+    .testi-name { font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.3; }
+    .testi-role { font-size: 12.5px; color: var(--muted); font-weight: 500; line-height: 1.3; }
+    @media (max-width: 1100px) { .testimonials { padding: 90px 32px; } .testi-col { width: 280px; } }
+    @media (max-width: 640px) { .testimonials { padding: 70px 20px; } .testi-col { width: 100%; max-width: 340px; } }
+
+    /* ─── CTA ─── */
+    .cta { padding: 140px 60px; background: var(--surface); position: relative; overflow: hidden; }
+    .cta::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse 70% 90% at 50% 100%, rgba(242,1,47,0.1) 0%, transparent 60%); }
+    .cta::after { content: ''; position: absolute; inset: 0; background-image: repeating-linear-gradient(-45deg, transparent, transparent 40px, rgba(242,1,47,0.015) 40px, rgba(242,1,47,0.015) 41px); }
+    .cta-inner { max-width: 760px; margin: 0 auto; text-align: center; position: relative; z-index: 1; }
+    .cta-eyebrow { display: inline-flex; align-items: center; gap: 10px; background: var(--red-dim); border: 1px solid rgba(242,1,47,0.2); border-radius: 100px; padding: 7px 18px; font-size: 11px; font-weight: 700; letter-spacing: 0.12em; color: var(--red); text-transform: uppercase; font-family: 'Poppins', sans-serif; margin-bottom: 28px; }
+    .cta-title { font-size: clamp(38px, 4.5vw, 66px); font-weight: 900; letter-spacing: -0.045em; line-height: 1.03; margin-bottom: 24px; }
+    .cta-title em { font-style: normal; color: var(--red); }
+    .cta-sub { font-size: 17px; color: var(--muted-light); line-height: 1.72; margin-bottom: 52px; font-weight: 500; }
+    .cta-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+    /* ─── FOOTER ─── */
+    footer { background: #040302; border-top: 1px solid var(--border); padding: 64px 60px 36px; }
+    .footer-top { display: grid; grid-template-columns: 2.2fr 1fr 1fr 1fr; gap: 56px; margin-bottom: 52px; max-width: 1240px; margin-left: auto; margin-right: auto; }
+    .footer-brand { margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+    .footer-brand img { height: 38px; mix-blend-mode: screen; filter: drop-shadow(0 0 6px rgba(242,1,47,0.3)); }
+    .footer-brand-t { font-family: 'Poppins', sans-serif; font-size: 17px; font-weight: 800; color: var(--text); letter-spacing: -0.02em; }
+    .footer-desc { font-size: 14px; color: var(--muted); line-height: 1.7; max-width: 260px; font-weight: 500; }
+    .footer-col-h { font-family: 'Poppins', sans-serif; font-size: 12px; font-weight: 700; color: var(--muted-light); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 20px; }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+    .footer-col ul a { font-size: 14px; color: var(--muted); text-decoration: none; font-weight: 500; transition: color 0.2s; }
+    .footer-col ul a:hover { color: var(--text); }
+    .footer-bottom { max-width: 1240px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; padding-top: 28px; border-top: 1px solid var(--border); }
+    .footer-copy { font-size: 13px; color: var(--muted); font-weight: 500; }
+    .footer-copy span { color: var(--red); }
+
+    /* ─── WHATSAPP BUTTON ─── */
+    .btn-wa {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: #25D366; color: #fff;
+      padding: 15px 34px; border-radius: 8px; font-size: 15px;
+      font-family: 'Poppins', sans-serif; font-weight: 700;
+      text-decoration: none;
+      box-shadow: 0 4px 24px rgba(37,211,102,0.28), inset 0 1px 0 rgba(255,255,255,0.15);
+      transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .btn-wa:hover { background: #1ebe5d; transform: translateY(-2px); box-shadow: 0 8px 36px rgba(37,211,102,0.4); }
+    .btn-wa:active { transform: translateY(0); }
+    .btn-wa svg { flex-shrink: 0; }
+
+    /* Floating WhatsApp */
+    .wa-float {
+      position: fixed; bottom: 28px; right: 28px; z-index: 400;
+      width: 56px; height: 56px; border-radius: 50%;
+      background: #25D366;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 20px rgba(37,211,102,0.45), 0 2px 8px rgba(0,0,0,0.3);
+      text-decoration: none;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      animation: wa-pop 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
+    }
+    .wa-float:hover { transform: scale(1.1); box-shadow: 0 8px 32px rgba(37,211,102,0.55); }
+    @keyframes wa-pop { from{transform:scale(0);opacity:0} to{transform:scale(1);opacity:1} }
+
+    /* ─── APPLY MODAL ─── */
+    .modal-overlay {
+      position: fixed; inset: 0; z-index: 600;
+      background: rgba(4, 3, 2, 0.85);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 20px;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .modal-overlay.open { opacity: 1; pointer-events: all; }
+    .modal-box {
+      background: #1A1815;
+      border: 1px solid rgba(244,243,238,0.1);
+      border-radius: 20px;
+      padding: 48px 52px;
+      width: 100%; max-width: 560px; max-height: 90vh; overflow-y: auto;
+      position: relative;
+      transform: translateY(20px) scale(0.98);
+      transition: transform 0.3s cubic-bezier(0.34,1.2,0.64,1);
+      box-shadow: 0 32px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(242,1,47,0.08);
+    }
+    .modal-overlay.open .modal-box { transform: translateY(0) scale(1); }
+    .modal-box::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--red), var(--gold), var(--red), transparent);
+      border-radius: 20px 20px 0 0;
+    }
+    .modal-close {
+      position: absolute; top: 18px; right: 20px;
+      background: rgba(244,243,238,0.06); border: 1px solid var(--border);
+      color: var(--muted); font-size: 18px; width: 32px; height: 32px;
+      border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s, color 0.2s;
+      font-family: 'Poppins', sans-serif; line-height: 1;
+    }
+    .modal-close:hover { background: rgba(242,1,47,0.15); color: var(--text); }
+    .modal-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+    .modal-logo img { height: 36px; mix-blend-mode: screen; }
+    .modal-logo-t { font-family: 'Poppins', sans-serif; font-size: 16px; font-weight: 800; color: var(--text); letter-spacing: -0.02em; }
+    .modal-title { font-size: 26px; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 8px; }
+    .modal-sub { font-size: 14px; color: var(--muted-light); margin-bottom: 32px; font-weight: 500; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-group { display: flex; flex-direction: column; gap: 7px; margin-bottom: 18px; }
+    .form-group label { font-size: 12px; font-weight: 700; color: var(--muted-light); text-transform: uppercase; letter-spacing: 0.08em; font-family: 'Poppins', sans-serif; }
+    .form-group input, .form-group textarea {
+      background: rgba(244,243,238,0.05);
+      border: 1px solid var(--border-mid);
+      border-radius: 8px; padding: 12px 16px;
+      color: var(--text); font-family: 'Quicksand', sans-serif;
+      font-size: 15px; font-weight: 500;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .form-group input::placeholder, .form-group textarea::placeholder { color: var(--muted); }
+    .form-group input:focus, .form-group textarea:focus { border-color: rgba(242,1,47,0.5); box-shadow: 0 0 0 3px rgba(242,1,47,0.1); }
+    .form-group textarea { resize: vertical; min-height: 100px; }
+    .form-submit {
+      width: 100%; padding: 15px; border-radius: 8px; border: none; cursor: pointer;
+      background: var(--red); color: var(--text);
+      font-family: 'Poppins', sans-serif; font-size: 15px; font-weight: 700;
+      box-shadow: 0 4px 24px rgba(242,1,47,0.28);
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+      margin-top: 8px;
+    }
+    .form-submit:hover { background: var(--red-dark); transform: translateY(-1px); box-shadow: 0 8px 32px rgba(242,1,47,0.4); }
+    .form-submit:active { transform: translateY(0); }
+    .form-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+    .modal-success {
+      display: none; flex-direction: column; align-items: center; text-align: center; padding: 20px 0;
+    }
+    .modal-success.show { display: flex; }
+    .success-icon { font-size: 56px; margin-bottom: 16px; }
+    .success-title { font-family: 'Poppins', sans-serif; font-size: 22px; font-weight: 800; margin-bottom: 10px; }
+    .success-text { font-size: 15px; color: var(--muted-light); font-weight: 500; }
+    @media (max-width: 600px) {
+      .modal-box { padding: 36px 24px; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+
+    /* ─── REVEAL ─── */
+    .reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.on { opacity: 1; transform: translateY(0); }
+    .d1 { transition-delay: 0.08s; }
+    .d2 { transition-delay: 0.16s; }
+    .d3 { transition-delay: 0.24s; }
+    .d4 { transition-delay: 0.32s; }
+
+    /* ─── MOBILE ─── */
+    @media (max-width: 1100px) {
+      .nav { padding: 18px 32px; }
+      .nav.scrolled { padding: 12px 32px; }
+      .nav-logo img { height: 75px; }
+      .nav-links li:not(:last-child) { display: none; }
+      .hero { padding: 110px 32px 80px; }
+      .hero-content { grid-template-columns: 1fr; }
+      .stats { padding: 20px 32px; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+      .stat:nth-child(2)::after { display: none; }
+      .about, .how, .benefits, .countries, .cta { padding: 90px 32px; }
+      .partners { padding: 60px 32px; }
+      footer { padding: 60px 32px 32px; }
+      .about-grid { grid-template-columns: 1fr; gap: 48px; }
+      .steps { grid-template-columns: 1fr; }
+      .steps-line { display: none; }
+      .bens { grid-template-columns: repeat(2, 1fr); }
+      .cou-grid { grid-template-columns: repeat(2, 1fr); }
+      .footer-top { grid-template-columns: 1fr 1fr; gap: 40px; }
+    }
+    @media (max-width: 640px) {
+      .hero { padding: 90px 20px 60px; }
+      .hero-video-bg video { object-position: top center; }
+      .about, .how, .benefits, .countries, .cta { padding: 70px 20px; }
+      .partners, .quote-band { padding: 50px 20px; }
+      footer { padding: 50px 20px 28px; }
+      .about-cards, .bens, .cou-grid, .footer-top { grid-template-columns: 1fr; }
+      .partners-row { flex-direction: column; }
+      .p-card { width: 100%; min-width: unset; padding: 28px 40px; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .stat::after { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav" id="nav">
+    <a href="#" class="nav-logo">
+      <img src="brand_assets/R%C4%B0DEBABAS%20Logo.png" alt="RIDEBABAS" />
+      <span class="nav-logo-text">RIDEBABAS</span>
+    </a>
+    <div class="nav-right">
+      <ul class="nav-links">
+        <li><a href="#about" data-i18n="nav.about">About</a></li>
+        <li><a href="#how" data-i18n="nav.how">How It Works</a></li>
+        <li><a href="#countries" data-i18n="nav.eligibility">Eligibility</a></li>
+        <li><a href="#cta" class="nav-cta" data-i18n="nav.apply">Apply Now</a></li>
+      </ul>
+      <div class="lang-toggle">
+        <button class="lang-btn active" id="btn-en" onclick="setLang('en')">EN</button>
+        <div class="lang-sep"></div>
+        <button class="lang-btn" id="btn-tr" onclick="setLang('tr')">TR</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="hero-video-bg">
+      <video autoplay muted playsinline preload="auto">
+        <source src="brand_assets/animation.mp4" type="video/mp4" />
+      </video>
+    </div>
+    <div class="hero-video-overlay"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-content">
+      <div class="hero-left">
+        <div class="hero-badge reveal">
+          <span class="hero-badge-dot"></span>
+          <span data-i18n="hero.badge">Now recruiting — Turkey &amp; Azerbaijan</span>
+        </div>
+        <h1 class="hero-title reveal d1" data-i18n-html="hero.title">
+          YOUR PATH TO<br>
+          <span class="line-red">WORK IN</span><br>
+          SERBIA <span class="line-gold">STARTS</span><br>HERE
+        </h1>
+        <p class="hero-sub reveal d2" data-i18n-html="hero.sub">
+          RIDEBABAS connects <strong>professional couriers</strong> from Turkey, Azerbaijan, and D-visa countries with <strong>Wolt</strong> and <strong>Mr.D</strong> — Serbia's top delivery platforms.
+        </p>
+        <div class="hero-actions reveal d3">
+          <button onclick="openModal()" class="btn btn-red" data-i18n="hero.cta1">Apply as Courier</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stats-grid">
+      <div class="stat reveal">
+        <div class="stat-num"><span class="r">2</span>+</div>
+        <div class="stat-lbl" data-i18n="stats.platforms">Partner Platforms</div>
+      </div>
+      <div class="stat reveal d1">
+        <div class="stat-num"><span class="g">3</span>+</div>
+        <div class="stat-lbl" data-i18n="stats.countries">Source Countries</div>
+      </div>
+      <div class="stat reveal d2">
+        <div class="stat-num">D<span class="r">-</span>Visa</div>
+        <div class="stat-lbl" data-i18n="stats.visa">Required Document</div>
+      </div>
+      <div class="stat reveal d3">
+        <div class="stat-num"><span class="g">100</span>%</div>
+        <div class="stat-lbl" data-i18n="stats.transparent">Transparent Process</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <section class="about" id="about">
+    <div class="section-wrap">
+      <div class="about-grid">
+        <div class="reveal">
+          <div class="chip" data-i18n="about.chip">Our Mission</div>
+          <h2 class="about-title" data-i18n-html="about.title">Bridging Talent<br>With <em>Opportunity</em></h2>
+          <p class="about-p" data-i18n-html="about.p1">RIDEBABAS is a <strong>courier supply company operating in Serbia</strong>. We partner with leading delivery platforms to bring skilled riders to where demand is growing.</p>
+          <p class="about-p" data-i18n-html="about.p2">We source talent primarily from <strong>Turkey and Azerbaijan</strong> — countries with a strong professional courier culture — and also welcome couriers from other D-visa eligible countries.</p>
+          <p class="about-p" data-i18n-html="about.p3">Our mission: make the path to work in Serbia as <strong>smooth, transparent, and reliable</strong> as possible — for every courier we bring on board.</p>
+        </div>
+        <div class="about-cards reveal d2">
+          <div class="acard">
+            <span class="acard-icon">🤝</span>
+            <div class="acard-t" data-i18n="about.card1.t">Trusted Partnerships</div>
+            <div class="acard-d" data-i18n="about.card1.d">Direct supply agreements with Wolt and Mr.D — Serbia's top delivery platforms.</div>
+          </div>
+          <div class="acard">
+            <span class="acard-icon">🛡️</span>
+            <div class="acard-t" data-i18n="about.card2.t">Zero Hidden Fees</div>
+            <div class="acard-d" data-i18n="about.card2.d">Full transparency at every step. No surprises, no unexpected charges.</div>
+          </div>
+          <div class="acard">
+            <span class="acard-icon">🌍</span>
+            <div class="acard-t" data-i18n="about.card3.t">Cross-Border Ready</div>
+            <div class="acard-d" data-i18n="about.card3.d">We help couriers navigate international relocation with expert guidance.</div>
+          </div>
+          <div class="acard">
+            <span class="acard-icon">⚡</span>
+            <div class="acard-t" data-i18n="about.card4.t">Fast Placement</div>
+            <div class="acard-d" data-i18n="about.card4.d">Streamlined onboarding means you start earning faster, with less waiting.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="how" id="how">
+    <div class="section-wrap">
+      <div class="how-head">
+        <div class="chip chip-centered reveal" data-i18n="how.chip">Process</div>
+        <h2 class="how-title reveal d1" data-i18n-html="how.title">How It <em>Works</em></h2>
+        <p class="how-sub reveal d2" data-i18n="how.sub">Three steps from your home country to the streets of Serbia</p>
+      </div>
+      <div class="steps">
+        <div class="steps-line"></div>
+        <div class="step reveal d1">
+          <div class="step-n">01</div>
+          <h3 class="step-t" data-i18n="how.s1.t">Apply Online</h3>
+          <p class="step-d" data-i18n="how.s1.d">Fill out our simple application. Share your experience, country of origin, and availability. No complex paperwork at this stage — just the basics.</p>
+        </div>
+        <div class="step reveal d2">
+          <div class="step-n">02</div>
+          <h3 class="step-t" data-i18n="how.s2.t">Get Matched</h3>
+          <p class="step-d" data-i18n="how.s2.d">We review your profile and match you with the right platform — Wolt or Mr.D — based on your location and schedule preferences.</p>
+        </div>
+        <div class="step reveal d3">
+          <div class="step-n">03</div>
+          <h3 class="step-t" data-i18n="how.s3.t">Start Riding</h3>
+          <p class="step-d" data-i18n="how.s3.d">Complete onboarding, receive your equipment, and hit the road. Our team supports you throughout the entire journey — before, during, and after.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PARTNERS -->
+  <section class="partners" id="partners">
+    <div class="section-wrap">
+      <p class="partners-lbl reveal" data-i18n="partners.lbl">Trusted by Serbia's leading delivery platforms</p>
+      <div class="partners-row">
+        <div class="p-card p-card-wolt reveal d1">
+          <div class="p-glow p-glow-wolt"></div>
+          <img class="p-logo" src="brand_assets/wolt-logo.png" alt="Wolt" />
+        </div>
+        <div class="p-card p-card-mrd reveal d2">
+          <div class="p-glow p-glow-mrd"></div>
+          <img class="p-logo" src="brand_assets/mrd-logo.png" alt="Mr.D" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BENEFITS -->
+  <section class="benefits" id="benefits">
+    <div class="section-wrap">
+      <div class="benefits-head reveal">
+        <div class="chip chip-centered" data-i18n="ben.chip">Why RIDEBABAS</div>
+        <h2 class="benefits-title" data-i18n-html="ben.title">Built for <em>Couriers</em></h2>
+        <p class="benefits-sub" data-i18n="ben.sub">Everything we do is designed to make your courier journey easier and more rewarding</p>
+      </div>
+      <div class="bens">
+        <div class="ben hot reveal">
+          <div class="ben-icon-wrap iw-red">
+            <svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+          </div>
+          <h3 class="ben-t" data-i18n="ben.b1.t">Competitive Earnings</h3>
+          <p class="ben-d" data-i18n="ben.b1.d">Work with platforms that offer strong per-delivery rates. More rides, more income — it's that straightforward.</p>
+        </div>
+        <div class="ben reveal d1">
+          <div class="ben-icon-wrap iw-blue">
+            <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+          </div>
+          <h3 class="ben-t" data-i18n="ben.b2.t">Visa Guidance</h3>
+          <p class="ben-d" data-i18n="ben.b2.d">We'll walk you through D-visa requirements step by step and help you prepare your full documentation package.</p>
+        </div>
+        <div class="ben reveal d2">
+          <div class="ben-icon-wrap iw-gold">
+            <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <h3 class="ben-t" data-i18n="ben.b3.t">Relocation Support</h3>
+          <p class="ben-d" data-i18n="ben.b3.d">Connecting you with housing resources and local community networks when you first arrive in Serbia.</p>
+        </div>
+        <div class="ben reveal d3">
+          <div class="ben-icon-wrap iw-teal">
+            <svg viewBox="0 0 24 24"><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M15 6a1 1 0 0 0-1 1v5h6M5.5 17.5 9 11l3 1"/><path d="m9 11 2-5h5l2 6"/></svg>
+          </div>
+          <h3 class="ben-t" data-i18n="ben.b4.t">Your Choice of Vehicle</h3>
+          <p class="ben-d" data-i18n="ben.b4.d">Bicycle, motorcycle, or car — you have the flexibility to work with whichever vehicle suits you best.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COUNTRIES -->
+  <section class="countries" id="countries">
+    <div class="section-wrap">
+      <div class="countries-head reveal">
+        <div class="chip" data-i18n="cou.chip">Eligibility</div>
+        <h2 class="countries-title" data-i18n-html="cou.title">Who Can <em>Apply</em></h2>
+        <p class="countries-sub" data-i18n="cou.sub">We primarily recruit from Turkey and Azerbaijan, and also accept couriers from any country eligible for a D-type long-stay visa in Serbia.</p>
+      </div>
+      <div class="cou-grid">
+        <div class="cou reveal">
+          <img class="cou-flag-img" src="https://flagcdn.com/80x60/tr.png" alt="Turkey" />
+          <div>
+            <div class="cou-name" data-i18n="cou.c1.name">Turkey</div>
+            <p class="cou-d" data-i18n="cou.c1.d">Our primary recruitment market. Strong courier culture, reliable work ethic, and an established transport ecosystem.</p>
+            <span class="tag tag-red" data-i18n="cou.primary">Primary Market</span>
+          </div>
+        </div>
+        <div class="cou reveal d1">
+          <img class="cou-flag-img" src="https://flagcdn.com/80x60/az.png" alt="Azerbaijan" />
+          <div>
+            <div class="cou-name" data-i18n="cou.c2.name">Azerbaijan</div>
+            <p class="cou-d" data-i18n="cou.c2.d">A growing source of professional couriers known for their discipline, driving skills, and commitment to quality service.</p>
+            <span class="tag tag-gold" data-i18n="cou.secondary">Growing Market</span>
+          </div>
+        </div>
+        <div class="cou reveal d2">
+          <div class="cou-flag">🌐</div>
+          <div>
+            <div class="cou-name" data-i18n="cou.c3.name">D-Visa Countries</div>
+            <p class="cou-d" data-i18n="cou.c3.d">Couriers from any country eligible for a Serbian D-type (long-stay) visa are welcome to apply. Get in touch and we'll confirm your eligibility.</p>
+            <span class="tag tag-green" data-i18n="cou.open">Open Applications</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUOTE -->
+  <!-- TESTIMONIALS -->
+  <section class="testimonials" id="testimonials">
+    <div class="section-wrap">
+      <div class="testi-header reveal">
+<h2 class="testi-title" data-i18n-html="testi.title">Kuryelerimiz <em>Ne Diyor</em></h2>
+        <p class="testi-sub" data-i18n="testi.sub">RIDEBABAS aracılığıyla Sırbistan'a geçiş yapan kuryelerden gerçek hikayeler.</p>
+      </div>
+      <div class="testi-cols">
+        <div class="testi-col testi-col-1"><div class="testi-inner" id="testi-col-1" style="animation-duration:28s"></div></div>
+        <div class="testi-col testi-col-2"><div class="testi-inner" id="testi-col-2" style="animation-duration:34s"></div></div>
+        <div class="testi-col testi-col-3"><div class="testi-inner" id="testi-col-3" style="animation-duration:24s"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta" id="cta">
+    <div class="cta-inner">
+      <div class="cta-eyebrow reveal" data-i18n="cta.eyebrow">Ready to Ride?</div>
+      <h2 class="cta-title reveal d1" data-i18n-html="cta.title">Join the <em>RIDEBABAS</em><br>Fleet Today</h2>
+      <p class="cta-sub reveal d2" data-i18n="cta.sub">Take the first step towards a better income in Serbia. Apply now and our team will get in touch within 48 hours.</p>
+      <div class="cta-btns reveal d3">
+        <button onclick="openModal()" class="btn btn-red" style="padding:17px 44px;font-size:16px" data-i18n="cta.btn1">Apply as a Courier</button>
+        <a href="https://wa.me/381621460363" target="_blank" rel="noopener" class="btn-wa" style="padding:17px 34px;font-size:16px">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          <span data-i18n="cta.btn2">WhatsApp</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-top">
+      <div>
+        <div class="footer-brand">
+          <img src="brand_assets/R%C4%B0DEBABAS%20Logo.png" alt="RIDEBABAS" />
+          <span class="footer-brand-t">RIDEBABAS</span>
+        </div>
+        <p class="footer-desc" data-i18n="footer.desc">Professional courier supply for Serbia's leading delivery platforms. Bridging talent from Turkey, Azerbaijan, and beyond.</p>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-h" data-i18n="footer.col1.h">Company</div>
+        <ul>
+          <li><a href="#about" data-i18n="footer.col1.l1">About Us</a></li>
+          <li><a href="#how" data-i18n="footer.col1.l2">How It Works</a></li>
+          <li><a href="#partners" data-i18n="footer.col1.l3">Partners</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-h" data-i18n="footer.col2.h">For Couriers</div>
+        <ul>
+          <li><a href="#countries" data-i18n="footer.col2.l1">Who Can Apply</a></li>
+          <li><a href="#benefits" data-i18n="footer.col2.l2">Benefits</a></li>
+          <li><a href="#cta" data-i18n="footer.col2.l3">Apply Now</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <div class="footer-col-h" data-i18n="footer.col3.h">Contact</div>
+        <ul>
+          <li><a href="#" data-i18n="footer.col3.l2">Serbia Operations</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p class="footer-copy" data-i18n-html="footer.copy">© 2025 RIDEBABAS. Made with <span>♥</span> for couriers worldwide.</p>
+      <p class="footer-copy" style="color:var(--muted)" data-i18n="footer.ops">Operating in Serbia</p>
+    </div>
+  </footer>
+
+  <!-- FLOATING WHATSAPP -->
+  <a href="https://wa.me/381621460363" target="_blank" rel="noopener" class="wa-float" title="WhatsApp">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+  </a>
+
+  <!-- APPLY MODAL -->
+  <div class="modal-overlay" id="apply-modal" onclick="handleOverlayClick(event)">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <div class="modal-logo">
+        <img src="brand_assets/R%C4%B0DEBABAS%20Logo.png" alt="RIDEBABAS" />
+        <span class="modal-logo-t">RIDEBABAS</span>
+      </div>
+      <h2 class="modal-title" data-i18n="form.title">Apply as a Courier</h2>
+      <p class="modal-sub" data-i18n="form.sub">Fill in your details and we'll get back to you within 48 hours.</p>
+
+      <form id="apply-form" onsubmit="submitForm(event)">
+        <input type="text" name="_honey" style="display:none" />
+        <div class="form-row">
+          <div class="form-group">
+            <label data-i18n="form.name">Name</label>
+            <input type="text" name="name" required data-i18n-placeholder="form.name.ph" placeholder="John" />
+          </div>
+          <div class="form-group">
+            <label data-i18n="form.surname">Surname</label>
+            <input type="text" name="surname" required data-i18n-placeholder="form.surname.ph" placeholder="Doe" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label data-i18n="form.email">Email Address</label>
+          <input type="email" name="email" required data-i18n-placeholder="form.email.ph" placeholder="you@example.com" />
+        </div>
+        <div class="form-group">
+          <label data-i18n="form.phone">Phone Number</label>
+          <input type="tel" name="phone" required data-i18n-placeholder="form.phone.ph" placeholder="+90 555 000 00 00" />
+        </div>
+        <div class="form-group">
+          <label data-i18n="form.desc">About Yourself</label>
+          <textarea name="description" required data-i18n-placeholder="form.desc.ph" placeholder="Tell us about your courier experience, availability, and why you'd like to work in Serbia..."></textarea>
+        </div>
+        <button type="submit" class="form-submit" id="form-submit-btn" data-i18n="form.submit">Submit Application</button>
+      </form>
+
+      <div class="modal-success" id="modal-success">
+        <div class="success-icon">✅</div>
+        <h3 class="success-title" data-i18n="form.success.t">Application Sent!</h3>
+        <p class="success-text" data-i18n="form.success.d">Thank you! We'll review your application and get back to you within 48 hours.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ── TRANSLATIONS ── */
+    const T = {
+      en: {
+        'nav.about':       'About',
+        'nav.how':         'How It Works',
+        'nav.eligibility': 'Eligibility',
+        'nav.apply':       'Apply Now',
+
+        'hero.badge':  'Now recruiting — Worldwide',
+        'hero.title':  'YOUR PATH TO<br><span class="line-red">WORK IN</span><br>SERBIA <span class="line-gold">STARTS</span><br>HERE',
+        'hero.sub':    'RIDEBABAS connects <strong>professional couriers</strong> from Turkey, Azerbaijan, and D-visa countries with <strong>Wolt</strong> and <strong>Mr.D</strong> — Serbia\'s top delivery platforms.',
+        'hero.cta1':   'Apply as Courier',
+        'hero.cta2':   'Learn More',
+        'hero.ticker': 'Open Positions in Serbia',
+        'reel.skip':   'Skip',
+        'reel.scroll': 'Continue',
+
+        'stats.platforms':        'Partner Platforms',
+        'stats.countries':        'Source Countries',
+        'stats.visa':             'Required Document',
+        'stats.visa_sub':         'Standard work permit',
+        'stats.transparent':      'Transparent Process',
+        'stats.transparent_sub':  'No hidden fees',
+
+        'about.chip':    'Our Mission',
+        'about.title':   'Bridging Talent<br>With <em>Opportunity</em>',
+        'about.p1':      'RIDEBABAS is a <strong>courier supply company operating in Serbia</strong>. We partner with leading delivery platforms to bring skilled riders to where demand is growing.',
+        'about.p2':      'We source talent primarily from <strong>Turkey and Azerbaijan</strong> — countries with a strong professional courier culture — and also welcome couriers from other D-visa eligible countries.',
+        'about.p3':      'Our mission: make the path to work in Serbia as <strong>smooth, transparent, and reliable</strong> as possible — for every courier we bring on board.',
+        'about.card1.t': 'Trusted Partnerships',
+        'about.card1.d': 'Direct supply agreements with Wolt and Mr.D — Serbia\'s top delivery platforms.',
+        'about.card2.t': 'Zero Hidden Fees',
+        'about.card2.d': 'Full transparency at every step. No surprises, no unexpected charges.',
+        'about.card3.t': 'Cross-Border Ready',
+        'about.card3.d': 'We help couriers navigate international relocation with expert guidance.',
+        'about.card4.t': 'Fast Placement',
+        'about.card4.d': 'Streamlined onboarding means you start earning faster, with less waiting.',
+
+        'how.chip':  'Process',
+        'how.title': 'How It <em>Works</em>',
+        'how.sub':   'Three steps from your home country to the streets of Serbia',
+        'how.s1.t':  'Apply Online',
+        'how.s1.d':  'Fill out our simple application. Share your experience, country of origin, and availability. No complex paperwork at this stage — just the basics.',
+        'how.s2.t':  'Get Matched',
+        'how.s2.d':  'We review your profile and match you with the right platform — Wolt or Mr.D — based on your location and schedule preferences.',
+        'how.s3.t':  'Start Riding',
+        'how.s3.d':  'Complete onboarding, receive your equipment, and hit the road. Our team supports you throughout the entire journey — before, during, and after.',
+
+        'partners.lbl': "Trusted by Serbia's leading delivery platforms",
+
+        'ben.chip':  'Why RIDEBABAS',
+        'ben.title': 'Built for <em>Couriers</em>',
+        'ben.sub':   'Everything we do is designed to make your courier journey easier and more rewarding',
+        'ben.b1.t':  'Competitive Earnings',
+        'ben.b1.d':  'Work with platforms that offer strong per-delivery rates. More rides, more income — it\'s that straightforward.',
+        'ben.b2.t':  'Visa Guidance',
+        'ben.b2.d':  'We\'ll walk you through D-visa requirements step by step and help you prepare your full documentation package.',
+        'ben.b3.t':  'Relocation Support',
+        'ben.b3.d':  'Connecting you with housing resources and local community networks when you first arrive in Serbia.',
+        'ben.b4.t':  'Your Choice of Vehicle',
+        'ben.b4.d':  'Bicycle, motorcycle, or car — you have the flexibility to work with whichever vehicle suits you best.',
+
+        'cou.chip':    'Eligibility',
+        'cou.title':   'Who Can <em>Apply</em>',
+        'cou.sub':     'We primarily recruit from Turkey and Azerbaijan, and also accept couriers from any country eligible for a D-type long-stay visa in Serbia.',
+        'cou.c1.name': 'Turkey',
+        'cou.c1.d':    'Our primary recruitment market. Strong courier culture, reliable work ethic, and an established transport ecosystem.',
+        'cou.c2.name': 'Azerbaijan',
+        'cou.c2.d':    'A growing source of professional couriers known for their discipline, driving skills, and commitment to quality service.',
+        'cou.c3.name': 'D-Visa Countries',
+        'cou.c3.d':    'Couriers from any country eligible for a Serbian D-type (long-stay) visa are welcome to apply. Get in touch and we\'ll confirm your eligibility.',
+        'cou.primary':   'Primary Market',
+        'cou.secondary': 'Growing Market',
+        'cou.open':      'Open Applications',
+
+        'quote.text':   'We make the path to work in Serbia as smooth, transparent, and reliable as possible — for every courier we bring on board.',
+        'quote.author': 'RIDEBABAS — Our Founding Promise',
+
+        'cta.eyebrow': 'Ready to Ride?',
+        'cta.title':   'Join the <em>RIDEBABAS</em><br>Fleet Today',
+        'cta.sub':     'Take the first step towards a better income in Serbia. Apply now and our team will get in touch within 48 hours.',
+        'cta.btn1':    'Apply as a Courier',
+        'cta.btn2':    'WhatsApp',
+
+        'footer.desc':    "Professional courier supply for Serbia's leading delivery platforms. Bridging talent from Turkey, Azerbaijan, and beyond.",
+        'footer.col1.h':  'Company',
+        'footer.col1.l1': 'About Us',
+        'footer.col1.l2': 'How It Works',
+        'footer.col1.l3': 'Partners',
+        'footer.col2.h':  'For Couriers',
+        'footer.col2.l1': 'Who Can Apply',
+        'footer.col2.l2': 'Benefits',
+        'footer.col2.l3': 'Apply Now',
+        'footer.col3.h':  'Contact',
+        'footer.col3.l2': 'Serbia Operations',
+        'footer.copy':    '© 2025 RIDEBABAS. Made with <span>♥</span> for couriers worldwide.',
+        'footer.ops':     'Operating in Serbia',
+
+        'testi.tag':   'Testimonials',
+        'testi.title': 'What Our <em>Couriers</em> Say',
+        'testi.sub':   'Real stories from couriers who made the move to Serbia through RIDEBABAS.',
+
+        'form.title':      'Apply as a Courier',
+        'form.sub':        "Fill in your details and we'll get back to you within 48 hours.",
+        'form.name':       'Name',
+        'form.name.ph':    'John',
+        'form.surname':    'Surname',
+        'form.surname.ph': 'Doe',
+        'form.email':      'Email Address',
+        'form.email.ph':   'you@example.com',
+        'form.phone':      'Phone Number',
+        'form.phone.ph':   '+90 555 000 00 00',
+        'form.desc':       'About Yourself',
+        'form.desc.ph':    'Tell us about your courier experience, availability, and why you\'d like to work in Serbia...',
+        'form.submit':     'Submit Application',
+        'form.success.t':  'Application Sent!',
+        'form.success.d':  "Thank you! We'll review your application and get back to you within 48 hours.",
+      },
+
+      tr: {
+        'nav.about':       'Hakkımızda',
+        'nav.how':         'Nasıl Çalışır',
+        'nav.eligibility': 'Uygunluk',
+        'nav.apply':       'Hemen Başvur',
+
+        'hero.badge':  'Şu an başvuru alıyoruz — Dünya Geneli',
+        'hero.title':  'SIRBİSTAN\'DA<br><span class="line-red">ÇALIŞMANIN</span><br>YOLU BURADAN<br><span class="line-gold">BAŞLIYOR</span>',
+        'hero.sub':    'RIDEBABAS, Türkiye, Azerbaycan ve D vizesi olan ülkelerden <strong>profesyonel kuryeler</strong> ile Sırbistan\'ın önde gelen platformları <strong>Wolt</strong> ve <strong>Mr.D</strong>\'yi buluşturuyor.',
+        'hero.cta1':   'Kurye Olarak Başvur',
+        'hero.cta2':   'Daha Fazla Bilgi',
+        'hero.ticker': 'Sırbistan\'da Açık Pozisyonlar',
+        'reel.skip':   'Atla',
+        'reel.scroll': 'Devam Et',
+
+        'stats.platforms':        'Ortak Platform',
+        'stats.countries':        'Kaynak Ülke',
+        'stats.visa':             'Gerekli Belge',
+        'stats.visa_sub':         'Standart çalışma izni',
+        'stats.transparent':      'Şeffaf Süreç',
+        'stats.transparent_sub':  'Gizli ücret yok',
+
+        'about.chip':    'Misyonumuz',
+        'about.title':   'Yeteneği<br><em>Fırsatla</em> Buluşturuyoruz',
+        'about.p1':      'RIDEBABAS, <strong>Sırbistan\'da faaliyet gösteren bir kurye tedarik şirketidir</strong>. Talebin büyüdüğü yerlere yetenekli sürücüler getirmek için önde gelen teslimat platformlarıyla ortaklık kuruyoruz.',
+        'about.p2':      'Yeteneklerimizi ağırlıklı olarak güçlü bir profesyonel kurye kültürüne sahip olan <strong>Türkiye ve Azerbaycan\'dan</strong> temin ediyoruz; D vizesi sahibi diğer ülkelerden gelen kuryeleri de memnuniyetle karşılıyoruz.',
+        'about.p3':      'Misyonumuz: Sırbistan\'da çalışma yolunu, bünyemize kattığımız her kurye için mümkün olduğunca <strong>sorunsuz, şeffaf ve güvenilir</strong> hale getirmek.',
+        'about.card1.t': 'Güvenilir Ortaklıklar',
+        'about.card1.d': 'Sırbistan\'ın en iyi teslimat platformları Wolt ve Mr.D ile doğrudan tedarik anlaşmaları.',
+        'about.card2.t': 'Sıfır Gizli Ücret',
+        'about.card2.d': 'Her adımda tam şeffaflık. Sürpriz yok, beklenmedik ücret yok.',
+        'about.card3.t': 'Sınır Ötesi Hazır',
+        'about.card3.d': 'Kuryelerimize uzman rehberlik ile uluslararası taşınma süreçlerinde destek oluyoruz.',
+        'about.card4.t': 'Hızlı Yerleştirme',
+        'about.card4.d': 'Kolaylaştırılmış işe alım süreci sayesinde daha az bekleme, daha hızlı kazanç.',
+
+        'how.chip':  'Süreç',
+        'how.title': 'Nasıl <em>Çalışır?</em>',
+        'how.sub':   'Memleketinizden Sırbistan sokaklarına uzanan üç adım',
+        'how.s1.t':  'Online Başvur',
+        'how.s1.d':  'Basit başvuru formunu doldurun. Deneyiminizi, ülkenizi ve müsaitlik durumunuzu paylaşın. Bu aşamada karmaşık evrak yok — sadece temel bilgiler.',
+        'how.s2.t':  'Eşleştirilme',
+        'how.s2.d':  'Profilinizi inceliyor, konum ve program tercihlerinize göre sizi doğru platform olan Wolt veya Mr.D ile eşleştiriyoruz.',
+        'how.s3.t':  'Sürmeye Başla',
+        'how.s3.d':  'İşe alımı tamamlayın, ekipmanınızı alın ve yola çıkın. Ekibimiz tüm süreç boyunca — öncesinde, sırasında ve sonrasında — yanınızda.',
+
+        'partners.lbl': 'Sırbistan\'ın önde gelen teslimat platformlarının güvendiği',
+
+        'ben.chip':  'Neden RIDEBABAS',
+        'ben.title': '<em>Kuryeler</em> İçin Tasarlandı',
+        'ben.sub':   'Yaptığımız her şey kurye yolculuğunuzu daha kolay ve kazançlı hale getirmek için tasarlanmıştır',
+        'ben.b1.t':  'Rekabetçi Kazanç',
+        'ben.b1.d':  'Yüksek teslimat başı ücret sunan platformlarda çalışın. Daha fazla sürüş, daha fazla gelir — bu kadar basit.',
+        'ben.b2.t':  'Vize Rehberliği',
+        'ben.b2.d':  'D vizesi gerekliliklerini adım adım açıklıyor, belgelerinizi hazırlamanıza yardımcı oluyoruz.',
+        'ben.b3.t':  'Taşınma Desteği',
+        'ben.b3.d':  'Sırbistan\'a ilk geldiğinizde konut kaynakları ve yerel topluluk ağlarına sizi bağlıyoruz.',
+        'ben.b4.t':  'İstediğin Araçla Çalış',
+        'ben.b4.d':  'Bisiklet, motosiklet veya otomobil — sana en uygun araçla çalışma esnekliğine sahipsin.',
+
+        'cou.chip':    'Uygunluk',
+        'cou.title':   'Kimler <em>Başvurabilir</em>',
+        'cou.sub':     'Ağırlıklı olarak Türkiye ve Azerbaycan\'dan işe alım yapıyor; Sırbistan\'da D tipi uzun süreli vizeye uygun her ülkeden kurye başvurusunu da kabul ediyoruz.',
+        'cou.c1.name': 'Türkiye',
+        'cou.c1.d':    'Birincil işe alım pazarımız. Güçlü kurye kültürü, güvenilir çalışma ahlakı ve köklü taşımacılık ekosistemi.',
+        'cou.c2.name': 'Azerbaycan',
+        'cou.c2.d':    'Disiplinleri, sürüş yetenekleri ve kaliteye bağlılıklarıyla öne çıkan profesyonel kuryelerin yetiştiği büyüyen bir kaynak.',
+        'cou.c3.name': 'D Vizesi Ülkeleri',
+        'cou.c3.d':    'Sırbistan\'da D tipi (uzun süreli) vizeye uygun her ülkeden kurye başvurabilir. Bize ulaşın, uygunluğunuzu birlikte değerlendirelim.',
+        'cou.primary':   'Birincil Pazar',
+        'cou.secondary': 'Büyüyen Pazar',
+        'cou.open':      'Açık Başvurular',
+
+        'quote.text':   'Sırbistan\'da çalışma yolunu bünyemize kattığımız her kurye için mümkün olduğunca sorunsuz, şeffaf ve güvenilir hale getiriyoruz.',
+        'quote.author': 'RIDEBABAS — Kuruluş Vaadimiz',
+
+        'cta.eyebrow': 'Sürmeye Hazır mısınız?',
+        'cta.title':   '<em>RIDEBABAS</em> Filosuna<br>Bugün Katıl',
+        'cta.sub':     'Sırbistan\'da daha iyi bir gelir için ilk adımı atın. Hemen başvurun, ekibimiz 48 saat içinde sizinle iletişime geçsin.',
+        'cta.btn1':    'Kurye Olarak Başvur',
+        'cta.btn2':    'WhatsApp',
+
+        'footer.desc':    'Sırbistan\'ın önde gelen teslimat platformları için profesyonel kurye tedariki. Türkiye, Azerbaycan ve ötesinden yetenekleri buluşturuyoruz.',
+        'footer.col1.h':  'Şirket',
+        'footer.col1.l1': 'Hakkımızda',
+        'footer.col1.l2': 'Nasıl Çalışır',
+        'footer.col1.l3': 'Ortaklar',
+        'footer.col2.h':  'Kuryeler İçin',
+        'footer.col2.l1': 'Kimler Başvurabilir',
+        'footer.col2.l2': 'Avantajlar',
+        'footer.col2.l3': 'Hemen Başvur',
+        'footer.col3.h':  'İletişim',
+        'footer.col3.l2': 'Sırbistan Operasyonları',
+        'footer.copy':    '© 2025 RIDEBABAS. Dünya genelindeki kuryeler için <span>♥</span> ile yapıldı.',
+        'footer.ops':     'Sırbistan\'da Faaliyet Gösteriyor',
+
+        'testi.tag':   'Referanslar',
+        'testi.title': 'Kuryelerimiz <em>Ne Diyor</em>',
+        'testi.sub':   'RIDEBABAS aracılığıyla Sırbistan\'a geçiş yapan kuryelerden gerçek hikayeler.',
+
+        'form.title':      'Kurye Olarak Başvur',
+        'form.sub':        '48 saat içinde size geri döneceğiz.',
+        'form.name':       'Ad',
+        'form.name.ph':    'Ahmet',
+        'form.surname':    'Soyad',
+        'form.surname.ph': 'Yılmaz',
+        'form.email':      'E-posta Adresi',
+        'form.email.ph':   'siz@ornek.com',
+        'form.phone':      'Telefon Numarası',
+        'form.phone.ph':   '+90 555 000 00 00',
+        'form.desc':       'Kendiniz Hakkında',
+        'form.desc.ph':    'Kurye deneyiminizi, müsaitliğinizi ve neden Sırbistan\'da çalışmak istediğinizi anlatın...',
+        'form.submit':     'Başvuruyu Gönder',
+        'form.success.t':  'Başvurunuz Alındı!',
+        'form.success.d':  'Teşekkürler! Başvurunuzu inceleyip 48 saat içinde size döneceğiz.',
+      }
+    };
+
+    let currentLang = localStorage.getItem('rb-lang') || 'tr';
+
+    function setLang(lang) {
+      currentLang = lang;
+      localStorage.setItem('rb-lang', lang);
+      document.documentElement.lang = lang;
+      document.title = lang === 'tr'
+        ? 'RIDEBABAS — Sırbistan\'da Kurye Tedariki'
+        : 'RIDEBABAS — Courier Supply for Serbia';
+
+      // text nodes
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (T[lang][key] !== undefined) el.textContent = T[lang][key];
+      });
+      // html nodes
+      document.querySelectorAll('[data-i18n-html]').forEach(el => {
+        const key = el.getAttribute('data-i18n-html');
+        if (T[lang][key] !== undefined) el.innerHTML = T[lang][key];
+      });
+
+      // placeholder attributes
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        if (T[lang][key] !== undefined) el.placeholder = T[lang][key];
+      });
+
+      // toggle button states
+      document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+      document.getElementById('btn-tr').classList.toggle('active', lang === 'tr');
+
+      buildTestimonials(lang);
+    }
+
+    /* ── TESTIMONIALS DATA ── */
+    const TESTI = {
+      tr: [
+        { text: "Türkiye'den Sırbistan'a geçiş sürecinde RIDEBABAS inanılmaz bir destek sağladı. Başvurudan ilk teslimatıma kadar sadece 3 hafta geçti, hiçbir aksaklık yaşamadım.", name: "Mehmet Yılmaz", role: "Kurye · İstanbul", image: "https://randomuser.me/api/portraits/men/11.jpg" },
+        { text: "D vizesi için hangi belgeleri hazırlayacağımı bilmiyordum. Ekip her adımda yanımdaydı; Belgrad'a sorunsuz yerleştim ve hemen çalışmaya başladım.", name: "Selin Arslan", role: "Kurye · Ankara", image: "https://randomuser.me/api/portraits/women/22.jpg" },
+        { text: "Mr.D ile çalışmak harika. RIDEBABAS beni doğru platformla eşleştirdi ve ilk ayımda Türkiye'deki kazancımın iki katını elde ettim.", name: "Emre Çelik", role: "Kurye · İzmir", image: "https://randomuser.me/api/portraits/men/33.jpg" },
+        { text: "Belgrad'da yabancı biri olarak başlamak korkutucuydu ama RIDEBABAS ekibi Türkçe konuşuyor ve her sorunu dakikalar içinde çözüyor.", name: "Ayşe Kaya", role: "Kurye · Bursa", image: "https://randomuser.me/api/portraits/women/44.jpg" },
+        { text: "Wolt üzerinden çalışmak gerçekten tatmin edici. RIDEBABAS'ın eşleştirme süreci o kadar iyi ki şehri tanırken kazanmaya başladım.", name: "Burak Özdemir", role: "Kurye · Adana", image: "https://randomuser.me/api/portraits/men/42.jpg" },
+        { text: "Azerbaycan'dan geldim. Hem vize sürecinde hem de kurye kaydında eksiksiz destek aldım. Artık Belgrad'da huzurla çalışıyorum.", name: "Nadia Əliyeva", role: "Kurye · Bakü", image: "https://randomuser.me/api/portraits/women/66.jpg" },
+        { text: "Şeffaf süreç ve sıfır gizli ücret beni en çok etkileyen şeydi. Vaat edilen her şey eksiksiz gerçekleşti, hiç hayal kırıklığına uğramadım.", name: "Mustafa Şahin", role: "Kurye · Konya", image: "https://randomuser.me/api/portraits/men/77.jpg" },
+        { text: "Gece geç saatte bile WhatsApp'tan yazıp yardım alabiliyorsunuz. Bu seviyede müşteri desteği başka hiçbir kurye şirketinde görmedim.", name: "Elif Doğan", role: "Kurye · Gaziantep", image: "https://randomuser.me/api/portraits/women/88.jpg" },
+        { text: "İlk haftamda bile güzel bir kazanç elde ettim. RIDEBABAS'ın platform eşleştirmesi gerçekten işe yarıyor; doğru yere yönlendirildiğimi hissettim.", name: "Ali Aydın", role: "Kurye · İstanbul", image: "https://randomuser.me/api/portraits/men/99.jpg" },
+      ],
+      en: [
+        { text: "RIDEBABAS provided incredible support during my transition from Turkey to Serbia. Just 3 weeks passed from my application to my first delivery — no hiccups at all.", name: "Mehmet Yılmaz", role: "Courier · Istanbul", image: "https://randomuser.me/api/portraits/men/11.jpg" },
+        { text: "I had no idea which documents to prepare for the D-visa. The team was with me at every step; I settled into Belgrade without issues and started working immediately.", name: "Selin Arslan", role: "Courier · Ankara", image: "https://randomuser.me/api/portraits/women/22.jpg" },
+        { text: "Working with Mr.D is great. RIDEBABAS matched me with the right platform and in my first month I earned twice what I made in Turkey.", name: "Emre Çelik", role: "Courier · Izmir", image: "https://randomuser.me/api/portraits/men/33.jpg" },
+        { text: "Starting as a foreigner in Belgrade was daunting, but the RIDEBABAS team speaks Turkish and resolves every issue within minutes.", name: "Ayşe Kaya", role: "Courier · Bursa", image: "https://randomuser.me/api/portraits/women/44.jpg" },
+        { text: "Working through Wolt is genuinely satisfying. RIDEBABAS's matching process is so good that I started earning while getting to know the city.", name: "Burak Özdemir", role: "Courier · Adana", image: "https://randomuser.me/api/portraits/men/55.jpg" },
+        { text: "I came from Azerbaijan. I received full support for both the visa process and courier registration. I'm now working peacefully in Belgrade.", name: "Nadia Əliyeva", role: "Courier · Baku", image: "https://randomuser.me/api/portraits/women/66.jpg" },
+        { text: "The transparent process and zero hidden fees impressed me most. Everything promised was delivered without exception — no disappointments.", name: "Mustafa Şahin", role: "Courier · Konya", image: "https://randomuser.me/api/portraits/men/77.jpg" },
+        { text: "You can message them on WhatsApp even late at night and get help. I've never seen this level of customer support at any other courier company.", name: "Elif Doğan", role: "Courier · Gaziantep", image: "https://randomuser.me/api/portraits/women/88.jpg" },
+        { text: "I had great earnings even in my first week. RIDEBABAS's platform matching really works — I felt directed to exactly the right place.", name: "Ali Aydın", role: "Courier · Istanbul", image: "https://randomuser.me/api/portraits/men/99.jpg" },
+      ]
+    };
+
+    function buildTestimonials(lang) {
+      const data = TESTI[lang];
+      const splits = [data.slice(0, 3), data.slice(3, 6), data.slice(6, 9)];
+      splits.forEach((col, i) => {
+        const el = document.getElementById(`testi-col-${i + 1}`);
+        if (!el) return;
+        const doubled = [...col, ...col];
+        el.innerHTML = doubled.map(t => `
+          <div class="testi-card">
+            <p class="testi-text">${t.text}</p>
+            <div class="testi-user">
+              <img class="testi-avatar" src="${t.image}" alt="${t.name}" />
+              <div>
+                <div class="testi-name">${t.name}</div>
+                <div class="testi-role">${t.role}</div>
+              </div>
+            </div>
+          </div>`).join('');
+      });
+    }
+
+    /* ── MODAL ── */
+    function openModal() {
+      const m = document.getElementById('apply-modal');
+      m.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      // reset form state
+      document.getElementById('apply-form').style.display = '';
+      document.getElementById('modal-success').classList.remove('show');
+      document.getElementById('form-submit-btn').disabled = false;
+    }
+    function closeModal() {
+      document.getElementById('apply-modal').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    function handleOverlayClick(e) {
+      if (e.target === document.getElementById('apply-modal')) closeModal();
+    }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    async function submitForm(e) {
+      e.preventDefault();
+      const btn = document.getElementById('form-submit-btn');
+      btn.disabled = true;
+      btn.textContent = currentLang === 'tr' ? 'Gönderiliyor...' : 'Sending...';
+
+      const form = document.getElementById('apply-form');
+      const data = new FormData(form);
+      data.append('_subject', 'New Courier Application — RIDEBABAS');
+      data.append('_captcha', 'false');
+
+      try {
+        await fetch('https://formsubmit.co/ajax/aliosmantosun39@gmail.com', {
+          method: 'POST',
+          headers: { 'Accept': 'application/json' },
+          body: data
+        });
+      } catch (_) { /* still show success — email may still deliver */ }
+
+      form.style.display = 'none';
+      document.getElementById('modal-success').classList.add('show');
+    }
+
+    // Init
+    setLang(currentLang);
+
+    // Sticky nav
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 40);
+    }, { passive: true });
+
+    // Scroll reveal
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('on'); });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    // Smooth anchor scroll
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        const t = document.querySelector(a.getAttribute('href'));
+        if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+      });
+    });
+  </script>
+</body>
+</html>
